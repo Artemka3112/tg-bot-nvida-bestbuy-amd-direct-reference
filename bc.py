@@ -10,7 +10,7 @@ class Broadcaster(threading.Thread):
 		print(f"({time.ctime(time.time())}) - Broadcaster started")
 
 		while settings.broadcasting:
-			for item in amd.items:
+			for item in amd.threads:
 				end = time.time()
 				if (item.found) and (end - item.time > settings.msgtimeout):
 					item.time = end
@@ -20,7 +20,7 @@ class Broadcaster(threading.Thread):
 						my_file.write(f"\n({time.ctime(end)}) - [amd] {item.order_name} was in stock")
 						my_file.close()
 					print(f"\n({time.ctime(end)}) - [amd] {item.order_name} - IN STOCK BRO!!!!")
-			for item in bestbuy.items:
+			for item in bestbuy.threads:
 				end = time.time()
 				if (item.found) and (end - item.time > settings.msgtimeout):
 					item.time = end
@@ -29,8 +29,7 @@ class Broadcaster(threading.Thread):
 						my_file = open("history.txt", 'a')
 						my_file.write(f"\n({time.ctime(end)}) - [bb] {item.order_name} was in stock")
 						my_file.close()
-					print(f"({time.ctime(end)}) - [bb] {item.order_name} - IN STOCK BRO!!!!")
-			time.sleep(1)
+					print(f"\n({time.ctime(end)}) - [bb] {item.order_name} - IN STOCK BRO!!!!")
 		print(f"({time.ctime(time.time())}) - Broadcaster stopped")
 	def stop(self):
 		pass#("Broadcaster stopped")

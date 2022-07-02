@@ -4,4 +4,3 @@ ujson==4.0.2
 cchardet==2.1.7
 aiodns==2.0.0
 aiohttp[speedups]==3.7.4
-colorama==0.4.5

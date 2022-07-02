@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import threading, time
 import sys ,signal
-import amd, bc, commands, settings, tg, bestbuy, restarter, userdata, server
+import amd, bc, commands, settings, tg, bestbuy, restarter, userdata
 from userdata import User
 import asyncio
 from aiogram import Bot, Dispatcher, executor, types
@@ -14,17 +14,15 @@ def signal_handling(signum,frame):
 	settings.inputcommands = False
 	amd.stopAmd()
 	bestbuy.stopBestbuy()
-	server.stopServer()
 	bc.stopBroadcaster()
 	restarter.stopRestarter()
 	userdata.writeUsers()
-	sys.exit(0)
+	sys.exit()
 
 commands.startCommands()
 bc.startBroadcaster()
 restarter.startRestarter()
 userdata.loadUsers()
-server.startServer()
 signal.signal(signal.SIGINT,signal_handling)
 
 if __name__ == '__main__':

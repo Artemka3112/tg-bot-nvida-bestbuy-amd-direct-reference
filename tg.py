@@ -35,12 +35,12 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(commands=['check'])
 async def start_checking(message: types.Message):
 	msg = ""
-	for item in amd.items:
+	for item in amd.threads:
 	    if (item.found):
 	    	msg+=(f"\n[amd] {item.order_name} - ready for adding to cart")
 	    else:
 	    	msg+=(f"\n[amd] {item.order_name} - out")
-	for item in bestbuy.items:
+	for item in bestbuy.threads:
 	    if (item.found):
 	    	msg+=(f"\n[bb] {item.order_name} - ready for adding to cart")
 	    else:
@@ -59,14 +59,14 @@ async def test_broadcast(message: types.Message):
 	await message.reply("Tested!")
 
 @dp.message_handler(commands=['follow'])
-async def follow(message: types.Message):
+async def test_broadcast(message: types.Message):
 	msg = ""
 	for user in userdata.users:
 		if (user.id == message.from_user.id):
 			if user.ordertime  - time.time() <= 0:
 				msg+=f"Your subscription has expired: {time.ctime(user.ordertime)}"
 			elif user.ordertime  - time.time() > 0:
-				msg+=f"Your subscription is expiring: {time.ctime(user.ordertime)}"
+				msg+=f"Your subscription is about to expire: {time.ctime(user.ordertime)}"
 
 
 	if not(msg == ""):
@@ -76,12 +76,11 @@ async def follow(message: types.Message):
 
 
 @dp.message_handler(commands=['status'])
-async def status(message: types.Message):
+async def test_broadcast(message: types.Message):
 	msg = ""
 	msg+=(f"\nAmd checking enable - {settings.amdenable}")
 	msg+=(f"\nBestbuy checking enable - {settings.bbenable}")
 	msg+=(f"\nBroadcasting enable - {settings.broadcasting}")
-	msg+=(f"\nServer enable - {settings.server}")
 	msg+=(f"\nRestart enable - {settings.restarting}")
 	msg+=(f"\nRestart cooldown - {settings.restartcooldown}(seconds)")
 	msg+=(f"\nLast restart - {time.ctime(restarter.timestart)}")
@@ -91,7 +90,7 @@ async def status(message: types.Message):
 		await message.reply("Empty")
 
 @dp.message_handler(commands=['urls'])
-async def urls(message: types.Message):
+async def test_broadcast(message: types.Message):
 	msg = ""
 	for name, order in settings.amd.items():
 		msg+=(f"\n[amd] {name} - {order}")
@@ -103,17 +102,15 @@ async def urls(message: types.Message):
 		await message.reply("Empty")
 
 @dp.message_handler(commands=['history'])
-async def history(message: types.Message):
+async def test_broadcast(message: types.Message):
 	msg = ""
 	try:
 		my_file = open("history.txt", 'r')
 		my_string = my_file.read().split("\n")
 		if len(my_string) >= 6:  
-			msg+=f"Last 5:"
-			for x in range(5,0,-1):
+			for x in range(1,6):
 				msg+=f"\n{my_string[len(my_string)-x]}"
 		elif len(my_string) > 1 and len(my_string) <= 5:
-			msg+=f"Last 5:"
 			for x in range(1,len(my_string)):
 				msg+=f"\n{my_string[x]}"
 		my_file.close()
@@ -144,7 +141,7 @@ async def send_message(user_id: int, text: str, disable_notification: bool = Fal
     except exceptions.TelegramAPIError:
         log.exception(f"Target [ID:{user_id}]: failed")
     else:
-        #log.info(f"Target [ID:{user_id}]: success")
+        log.info(f"Target [ID:{user_id}]: success")
         return True
     return False
 
@@ -158,7 +155,7 @@ async def broadcaster() -> int:
 			for user in userdata.users:
 				if user.ordertime  - time.time() <= 0:
 					continue
-				for item in amd.items:
+				for item in amd.threads:
 					end = time.time()
 					if (item.found) and (end - user.timer > settings.msgtimeout):
 						if await send_message(user.id, f"\n[amd] {item.order_name} - IN STOCK BRO!!!!"):
@@ -166,7 +163,7 @@ async def broadcaster() -> int:
 							count+=1
 							user.timer = end
 						await asyncio.sleep(.05)  # 20 messages per second (Limit: 30 messages per second)
-				for item in bestbuy.items:
+				for item in bestbuy.threads:
 					end = time.time()
 					if (item.found) and (end - user.timerbb > settings.msgtimeout):
 						if await send_message(user.id, f"\n[bb] {item.order_name} - IN STOCK BRO!!!!"):

@@ -1,5 +1,5 @@
 import threading, time
-import amd, bc, settings, bestbuy,restarter, userdata, server
+import amd, bc, settings, bestbuy,restarter, userdata
 import sys
 
 class Commands(threading.Thread):
@@ -29,8 +29,6 @@ class Commands(threading.Thread):
 				res = amd.stopAmd()
 			if "stop bb" == command:
 				res = bestbuy.stopBestbuy()
-			if "stop server" == command:
-				res = server.stopServer()
 
 			if "start" == command:
 				res = amd.startAmd()
@@ -39,15 +37,6 @@ class Commands(threading.Thread):
 				res = amd.startAmd()
 			if "start bb" == command:
 				res = bestbuy.startBestbuy()
-			if "start server" == command:
-				res = server.startServer()
-
-			if "log" == command:
-				if settings.loggingexceptions:
-					settings.loggingexceptions = False
-				else:
-					settings.loggingexceptions = True
-				res = True
 
 			if "restart" == command:
 				res = amd.restartAmd()
@@ -56,8 +45,6 @@ class Commands(threading.Thread):
 				res = amd.restartAmd()
 			if "restart bb" == command:
 				res = bestbuy.restartBestbuy()
-			if "restart server" == command:
-				res = server.restartServer()
 
 			if "userdata" == command:
 				for user in userdata.users:
@@ -76,13 +63,12 @@ class Commands(threading.Thread):
 			if "close" == command:
 				amd.stopAmd()
 				bestbuy.stopBestbuy()
-				server.stopServer()
 				bc.stopBroadcaster()
 				restarter.stopRestarter()
 				userdata.writeUsers()
 				res = True
 				print("press ctrl + c")
-				sys.exit(0)
+				sys.exit()
 				break
 			if "bc" == command:
 				if len(bc.threadbroadcaster) == 0:
@@ -120,7 +106,6 @@ class Commands(threading.Thread):
 				print(f"({time.ctime(time.time())}) - Done!")
 			else:
 				print(f"({time.ctime(time.time())}) - help to know commands or error")
-			time.sleep(1)
 		print(f"({time.ctime(time.time())}) - Commands stopped")
 
 def startCommands():

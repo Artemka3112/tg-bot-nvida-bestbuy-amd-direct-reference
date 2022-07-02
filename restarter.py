@@ -10,26 +10,16 @@ class Restarter(threading.Thread):
 	def run(self):
 		print(f"({time.ctime(time.time())}) - Restarter started")
 		while settings.restarting:
-			try:
-				global timestart
-				if timestart == 0:
-					timestart = time.time()
-					continue
-				end = time.time()
-				if end - timestart >= settings.restartcooldown:
-					print(f"({time.ctime(time.time())}) - Time for restarting")
-					timestart = end
-					amd.restartAmd()
-					bestbuy.restartBestbuy()
-				for item in amd.threads:
-					if not(item.is_alive()):
-						amd.restartAmd()
-				for item in bestbuy.threads:
-					if not(item.is_alive()):
-						bestbuy.restartBestbuy()
-			except Exception as e:
-				pass
-			time.sleep(1)
+			global timestart
+			if timestart == 0:
+				timestart = time.time()
+				continue
+			end = time.time()
+			if end - timestart == settings.restartcooldown:
+				print(f"({time.ctime(time.time())}) - Time for restarting")
+				timestart = end.time()
+				amd.restartAmd()
+				bestbuy.restartBestbuy()
 		print(f"({time.ctime(time.time())}) - Restarter stopped")
 	def stop(self):
 		pass#("Restarter stopped")
